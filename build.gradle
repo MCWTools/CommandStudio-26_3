@@ -1,0 +1,63 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+base {
+	archivesName = project.archives_base_name
+}
+
+loom {
+	// ./gradlew runClient -Pautotest : joins the dev world "New World" and runs the in-process GUI self test, then closes the game
+	if (project.hasProperty('autotest')) {
+		runs {
+			client {
+				vmArg "-Dcommandstudio.autotest=true"
+				programArgs "--quickPlaySingleplayer", "New World"
+			}
+		}
+	}
+	mods {
+		"commandstudio" {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// KhoaAPILibs (modid khoaapi): a separate mod installed next to Command Studio. Compiled against, never bundled.
+	implementation files("libs/KhoaAPILibs-1.0.0.jar")
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+	def projectName = project.name
+	inputs.property "projectName", projectName
+
+	from("LICENSE") {
+		rename { "${it}_$projectName" }
+	}
+}

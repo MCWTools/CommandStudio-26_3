@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "commandstudio",
+	"version": "${version}",
+	"name": "Command Studio",
+	"description": "Visual Minecraft command generator: pick items and components in a GUI, get a live /give command, copy or run it. Open with /commandstudio.",
+	"authors": [
+		"Khoa"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/commandstudio/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"khoa.studio.CommandStudioClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*",
+		"khoaapi": ">=1.0.0"
+	}
+}
